@@ -3,6 +3,7 @@
 
 #include "BaseScene.hpp"
 #include "ISceneChanger.hpp"
+#include "tetrimino.hpp"
 
 
 //ゲーム画面クラス
@@ -15,7 +16,7 @@ public:
 	void Draw() override;       //描画処理をオーバーライド
 	
 private:
-
+	Tetrimino* mino;
 };
 
 #endif
