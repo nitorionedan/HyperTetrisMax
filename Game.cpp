@@ -6,20 +6,20 @@
 
 Game::Game(ISceneChanger * changer)
 	: BaseScene(changer)
-	, mino(new Tetrimino) // mino = new Tetorimino;
+	//, mino(new Tetrimino) // mino = new Tetorimino;
 {
 }
 
 
 Game::~Game()
 {
-	delete mino;
+	//delete mino;
 }
 
 
 void Game::Update()
 {
-	mino->Update();
+	//mino->Update();
 
 	if (Keyboard_Get(KEY_INPUT_Z) == 1) mSceneChanger->ChangeScene(eScene_Menu);
 }
@@ -27,7 +27,7 @@ void Game::Update()
 
 void Game::Draw()
 {
-	mino->Draw();
+	//mino->Draw();
 
 	// TEST
 	DrawFormatString(0, 20, GetColor(0, 255, 0), "GAME_SCENE_NOW");
