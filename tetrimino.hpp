@@ -38,7 +38,7 @@ public:
 	void Mino5(); //L型テトリミノ
 	void Mino6(); //L2型テトリミノ
 	void Mino7(); //T型テトリミノ
-	void Create_Mino(); //実際のテトリミノを作成する
+	Tetrimino& Create_Mino(); //実際のテトリミノを作成する
 	void Copy_Mino(); //作ったテトリミノをコピーし落下用のテトリミノを作成
 	void Move_Mino_Down(); //落下するテトリミノ
 	void Draw_Falling_Mino(); //落下していくテトリミノを描画
@@ -52,5 +52,5 @@ public:
 
 private:
 	int gh_mino[10]; //テトリミノの画像
-	int gh_mino_piece[10];
+	int gh_mino_piece[10]; //テトリミノのピースの画像
 };

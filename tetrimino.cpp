@@ -1,4 +1,5 @@
 #include "tetrimino.hpp"
+#include "Field.hpp"
 #include "Dxlib.h"
 
 
@@ -151,44 +152,60 @@ void Tetrimino::Mino7() //T型テトリミノ
 	mino_color[3][2] = 7;
 }
 
-void Tetrimino::Create_Mino() //実際のテトリミノを作成する
+Tetrimino& Tetrimino::Create_Mino() //実際のテトリミノを作成する
 {
 	int Random = rand() % 7 + 1;
 	Tetrimino::Mino_teigi();
 	
+	// 一時的なテトリミノ
+	Tetrimino mino;
+
 	switch (Random) {
 	case 1:
-		Tetrimino::Mino1();
+		mino.mino[1][0] = 1;
+		mino.mino[1][1] = 1;
+		mino.mino[1][2] = 1;
+		mino.mino[1][3] = 1;
+
+		mino.mino_color[1][0] = 1; //色を定義
+		mino.mino_color[1][1] = 1;
+		mino.mino_color[1][2] = 1;
+		mino.mino_color[1][3] = 1;
+		
+		return	mino;	// 情報を設定したミノを返す
 
 	case 2:
-		Tetrimino::Mino2();
+//		Tetrimino::Mino2();
 
 	case 3:
-		Tetrimino::Mino3();
+//		Tetrimino::Mino3();
 
 	case 4:
-		Tetrimino::Mino4();
+//		Tetrimino::Mino4();
 
 	case 5:
-		Tetrimino::Mino5();
+//		Tetrimino::Mino5();
 
 	case 6:
-		Tetrimino::Mino6();
+//		Tetrimino::Mino6();
 
 	case 7:
-		Tetrimino::Mino7();
+//		Tetrimino::Mino7();
+
+	default:	printfDx("そんなものはない\n");	break;
 	}
 }
 
 void Tetrimino::Copy_Mino() //作ったテトリミノをコピーし落下用のテトリミノを作成
 {
-	Tetrimino::Create_Mino();
+	Tetrimino mino;
+
 	for (int x = 0; x < piece_width; x++)
 	{
 		for (int y = 0; y < piece_height; y++)
 		{
-			mino[x][y] = Create_Mino->mino[x][y]; //生成したテトリミノをコピー
-			mino_color[x][y] = Create_Mino->mino_color[x][y];
+			this->mino[x][y] = mino.mino[x][y]; //生成したテトリミノをコピー
+			this->mino_color[x][y] = mino.mino_color[x][y];
 		}
 	}
 	
@@ -203,11 +220,11 @@ void Tetrimino::Draw_Falling_Mino() //落下していくテトリミノを描画
 {
 	Tetrimino::Copy_Mino();
 
-	for (int y = 0; y < FieldHeight; y++)
+	for (int y = 0; y < Field::FieldHeight; y++)
 	{
-		for (int x = 0; x < FieldWidth; x++)
+		for (int x = 0; x < Field::FieldWidth; x++)
 		{
-			int ptx = (mino_position_x)
+			int ptx = (mino_position_x);
 		}
 	}
 
