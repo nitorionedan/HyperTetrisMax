@@ -4,6 +4,8 @@
 #include "BaseScene.hpp"
 #include "ISceneChanger.hpp"
 #include "tetrimino.hpp"
+#include "Field.hpp"
+#include "Gauge.hpp"
 
 
 //ゲーム画面クラス
@@ -16,7 +18,8 @@ public:
 	void Draw() override;       //描画処理をオーバーライド
 	
 private:
-	Tetrimino* mino;
+	Tetrimino* tetrimino;
+	Field* field;
 };
 
 #endif

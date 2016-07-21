@@ -62,7 +62,7 @@ void Initialize()
 {
 	SetGraphMode(850, 650, 32), ChangeWindowMode(TRUE), DxLib_Init();							// ウィンドウ初期設定(VGA),DxLib起動
 	SetDrawScreen(DX_SCREEN_BACK);																// 裏画面処理
-	SetMainWindowText("演習");																	// タイトルを設定
+	SetMainWindowText("Hyper Tetris Max");																	// タイトルを設定
 	SetChangeScreenModeGraphicsSystemResetFlag(FALSE);											// 画面モード変更後、素材メモリをリセットしない
 	SetWaitVSyncFlag(FALSE);																	// 垂直同期信号を待たない
 	FrameStartTime = GetNowCount();																// 開始時間を設定

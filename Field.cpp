@@ -2,17 +2,55 @@
 #include "tetrimino.hpp"
 #include "DxLib.h"
 
+int Field::FieldMino[FieldWidth][FieldHeight]; //ƒeƒgƒŠƒXƒtƒB[ƒ‹ƒh‚Ìƒ}ƒX
+int Field::FieldColor[FieldWidth][FieldHeight];
+
 Field::Field()
 {
+	gh_mino[0] = LoadGraph("mino0.png"); //ƒeƒgƒŠƒ~ƒm‚Ì‰æ‘œ
+	gh_mino[1] = LoadGraph("mino1.png");
+	gh_mino[2] = LoadGraph("mino2.png");
+	gh_mino[3] = LoadGraph("mino3.png");
+	gh_mino[4] = LoadGraph("mino4.png");
+	gh_mino[5] = LoadGraph("mino5.png");
+	gh_mino[6] = LoadGraph("mino6.png");
 
+	gh_mino_piece[0] = LoadGraph("mino_piece0.png"); //ƒeƒgƒŠƒ~ƒm‚Ìƒs[ƒX‚Ì‰æ‘œ
+	gh_mino_piece[1] = LoadGraph("mino_piece1.png");
+	gh_mino_piece[2] = LoadGraph("mino_piece2.png");
+	gh_mino_piece[3] = LoadGraph("mino_piece3.png");
+	gh_mino_piece[4] = LoadGraph("mino_piece4.png");
+	gh_mino_piece[5] = LoadGraph("mino_piece5.png");
+	gh_mino_piece[6] = LoadGraph("mino_piece6.png");
 }
 
 Field::~Field()
 {
+	for (int i = 0; i < sizeof(gh_mino) / sizeof(gh_mino[0]); i++)
+	{
+		if (gh_mino[i] != 0 && gh_mino[i] != -1)
+			DeleteGraph(gh_mino[i]);
 
+		if (gh_mino_piece[i] != 0 && gh_mino_piece[i] != -1)
+			DeleteGraph(gh_mino_piece[i]);
+	}
 }
 
-int Field::DeleteLine() //–„‚Ü‚Á‚½s‚ğÁ‚·
+void Field::Update(Tetrimino* mino)
+{
+	DeleteLine(mino);
+	//MinoShift();
+	MakeMainField(mino);
+}
+
+void Field::Draw()
+{
+	DrawMainField();
+	DrawFieldMino();
+	DrawSubField();
+}
+
+int Field::DeleteLine(Tetrimino* mino) //–„‚Ü‚Á‚½s‚ğÁ‚·
 {
 	int DeleteCount = 0;
 	
@@ -65,12 +103,12 @@ void Field::MinoShift(int DeleteCount) //”»’è‚ğ‰º‚Ö‚¸‚ç‚·
 				if (ty - 1 > -0)
 				{
 					FieldMino[tx][ty] = FieldMino[tx][ty - 1];
-					mino_color[tx][ty] = mino_color[tx][ty - 1];
+					FieldColor[tx][ty] = FieldColor[tx][ty - 1];
 				}
 				else //19s–Ú‚©‚çã‚Ì”»’è‚Í–³‚µ‚Éİ’è
 				{
 					FieldMino[tx][0] = 0;
-					mino_color[tx][0] = 0;
+					FieldColor[tx][0] = 0;
 				}
 			}
 		}
@@ -78,14 +116,14 @@ void Field::MinoShift(int DeleteCount) //”»’è‚ğ‰º‚Ö‚¸‚ç‚·
 	}
 }
 
-void Field::MakeMainField() //ƒeƒgƒŠƒXƒtƒB[ƒ‹ƒh‚ğì¬
+void Field::MakeMainField(Tetrimino* mino) //ƒeƒgƒŠƒXƒtƒB[ƒ‹ƒh‚ğì¬
 {
 	for (int y = 0; y < FieldHeight; y++)
 	{
 		for (int x = 0; x < FieldWidth; x++)
 		{
 			FieldMino[x][y] = 0;
-			color[x][y] = 0;
+			FieldColor[x][y] = 0;
 		}
 	}
 
@@ -97,29 +135,30 @@ void Field::DrawMainField() //ƒeƒgƒŠƒXƒtƒB[ƒ‹ƒh‚É30~30‚Ì˜gü‚ğ‚Â‚¯•ª‚©‚è‚â‚·‚­
 	{
 		for (int x = 0; x < FieldWidth; x++)
 		{
-			int Field_Cell_x = 220 + (x + 1)*Piece_Cell_Width;
-			int Field_Cell_y = -5 + (y + 1)*Piece_Cell_Height;
+			int Field_Cell_x = 220 + (x + 1)*Tetrimino::Piece_Cell_Width;
+			int Field_Cell_y = -5 + (y + 1)*Tetrimino::Piece_Cell_Height;
 
-			DrawBox(Field_Cell_x, Field_Cell_y, Field_Cell_x + Piece_Cell_Width, Field_Cell_y + Piece_Cell_Height, GetColor(255, 255, 255), false);
+			DrawBox(Field_Cell_x, Field_Cell_y, Field_Cell_x + Tetrimino::Piece_Cell_Width, Field_Cell_y + Tetrimino::Piece_Cell_Height, GetColor(255, 255, 255), false);
 		}
 	}
 	DrawBox(250, 25, 550, 625, GetColor(255, 255, 255), false); //ƒƒCƒ“ƒtƒB[ƒ‹ƒh‚Ì•`‰æ
 }
 
-void Field::DrawMainField2() //ƒeƒgƒŠƒXƒtƒB[ƒ‹ƒh‚É”z’u‚³‚ê‚½ƒeƒgƒŠƒ~ƒm‚É‰æ‘œ‚ğ•t‚¯‚é
+void Field::DrawFieldMino() //ƒeƒgƒŠƒXƒtƒB[ƒ‹ƒh‚É”z’u‚³‚ê‚½ƒeƒgƒŠƒ~ƒm‚É‰æ‘œ‚ğ•t‚¯‚é
 {
 	for (int y = 0; y < FieldHeight; y++)
 	{
 		for (int x = 0; x < FieldWidth; x++)
 		{
-			int Field_Cell_x = (x + 1)*Piece_Cell_Width;
-			int Field_Cell_y = (y + 1)*Piece_Cell_Height;
+			int Field_Cell_x = (x + 1)*Tetrimino::Piece_Cell_Width;
+			int Field_Cell_y = (y + 1)*Tetrimino::Piece_Cell_Height;
 
 			if (FieldMino != 0)
 			{
-				switch (mino_color[x][y]) //mino_color•Ï”‚²‚Æ‚É‰æ‘œ‚ğ”z’u(Tetrimino::Mino‚ğQÆ)@@@@‰æ‘œ‚Í’Ç‰Á—\’è
+				switch (Field::FieldColor[x][y]) //mino_color•Ï”‚²‚Æ‚É‰æ‘œ‚ğ”z’u(Tetrimino::Mino‚ğQÆ)@@@@‰æ‘œ‚Í’Ç‰Á—\’è
 				{
 				case 1:
+					
 					DrawGraph(Field_Cell_x, Field_Cell_y, gh_mino_piece[1], true); //gh_mino_piece=ƒeƒgƒŠƒ~ƒm‚Ìƒs[ƒX‰æ‘œ
 					break;
 				case 2:
@@ -147,7 +186,7 @@ void Field::DrawMainField2() //ƒeƒgƒŠƒXƒtƒB[ƒ‹ƒh‚É”z’u‚³‚ê‚½ƒeƒgƒŠƒ~ƒm‚É‰æ‘œ‚ğ•
 	}
 }
 
-void Field::DrawSabField()
+void Field::DrawSubField()
 {
 	DrawBox(25, 35, 225, 235, GetColor(255, 255, 255), false); //‘æ1ƒz[ƒ‹ƒh
 	DrawBox(25, 255, 225, 455, GetColor(255, 255, 255), false); //‘æ2ƒz[ƒ‹ƒh
@@ -155,18 +194,4 @@ void Field::DrawSabField()
 	DrawBox(600, 250, 750, 400, GetColor(255, 255, 255), false); //ƒlƒNƒlƒN
 	DrawBox(600, 415, 750, 565, GetColor(255, 255, 255), false); //ƒlƒNƒXƒg3
 	DrawBox(590, 600, 820, 630, GetColor(255, 255, 255), false); //‘SÁ‚µƒQ[ƒW
-}
-
-void Field::AllDelete() //‘SÁ‚µƒ|ƒCƒ“ƒg‚ª100ƒ|ƒCƒ“ƒg’™‚Ü‚é‚ÆA”CˆÓ‚Ìƒ^ƒCƒ~ƒ“ƒO‚Å“Á’è‚Ì1–Ê‚ğ‘SÁ‚µ‚Å‚«‚é
-{
-	for (int y = 0; y < FieldHeight; y++)
-	{
-		for (int x = 0; x < FieldWidth; x++)
-		{
-			FieidMino[x][y] = 0; //ƒeƒgƒŠƒXƒtƒB[ƒ‹ƒhã‚Ì”»’è‚ğ‘S‚ÄÁ‹
-			color[x][y] = 0; //ƒeƒgƒŠƒXƒtƒB[ƒ‹ƒh‚ÌƒeƒgƒŠƒ~ƒm‚ÌF‚ğÁ‹
-
-		}
-	}
-	AllDeletePoint = 0;
 }
